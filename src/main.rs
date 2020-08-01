@@ -2,13 +2,16 @@
 
 mod cli;
 mod prelude;
+mod repository;
 
 use crate::prelude::*;
 use cli::*;
+use repository::Repository;
 
 #[async_std::main]
 async fn main() -> Result<()> {
-    let args = CommandLineArgs::parse();
-    println!("{:?}", args);
+    let config = Configuration::load()?;
+    let repo = Repository::builder().configure(&config).build()?;
+
     Ok(())
 }
