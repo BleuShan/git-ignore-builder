@@ -22,7 +22,6 @@ version = "1.6.2"
 features = [
     "attributes",
     "unstable",
-    "default"
 ]
 
 [dependencies.clap]
@@ -31,8 +30,19 @@ features = [
   "wrap_help"
 ]
 
+[dependencies.crossterm]
+version = "0.17"
+features = ["event-stream"] 
+
 [dependencies.serde]
 version = "1.0.114"
 features = [
   "derive"
+]
+
+[dependencies.tui]
+version = "0.10.0"
+default-features = false
+features = [
+  "crossterm"
 ]
