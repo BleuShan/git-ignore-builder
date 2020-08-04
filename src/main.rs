@@ -16,6 +16,9 @@ use ui::{
     widgets::*,
     Application,
     Event::*,
+    InputEvent::*,
+    KeyCode,
+    KeyEvent,
     Renderer,
 };
 
@@ -39,11 +42,25 @@ async fn update(renderer: &mut Renderer, state: State) -> Result<State> {
 
 #[async_std::main]
 async fn main() -> Result<()> {
-    let mut app = Application::new()?;
-    app.run_loop(|renderer, event, state| match event {
-        Init => Box::pin(init(renderer, state)),
-        Update => Box::pin(update(renderer, state)),
-        _ => Box::pin(future::ready(Ok(state))),
+    let mut app = Application::builder()
+        .enable_raw_mode()
+        .use_alternate_screen()
+        .build()?;
+
+    app.run_loop(|renderer, event, state| {
+        Box::pin(async move {
+            match event {
+                Init => init(renderer, state).await,
+                Exit => {
+                    if let Some(config) = state.configuration() {
+                        config.save_if_needed().await?;
+                    }
+                    Ok(state)
+                }
+                Update => update(renderer, state).await,
+                _ => Ok(state),
+            }
+        })
     })
     .await
 }

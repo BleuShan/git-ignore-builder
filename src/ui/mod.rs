@@ -8,6 +8,10 @@ pub use crossterm::{
         MouseButton,
         MouseEvent,
     },
+    style::{
+        Colorize,
+        Styler,
+    },
     terminal,
     ExecutableCommand,
 };
