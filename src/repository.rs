@@ -1,12 +1,9 @@
 use crate::{
-    cli::Configuration,
     prelude::*,
+    Configuration,
 };
 use async_std::{
-    sync::{
-        self,
-        Arc,
-    },
+    sync::Arc,
     task,
 };
 use git2::{
@@ -22,9 +19,9 @@ pub struct Repository {
 }
 
 impl Repository {
-    pub fn new(config: &Arc<Configuration>) -> Self {
+    pub fn new(config: Arc<Configuration>) -> Self {
         Self {
-            config: config.clone(),
+            config,
             inner: Default::default(),
         }
     }

@@ -1,7 +1,7 @@
 use crate::prelude::*;
 pub use crossterm::{
     event::{
-        Event,
+        Event as InputEvent,
         KeyCode,
         KeyEvent,
         KeyModifiers,
@@ -10,10 +10,6 @@ pub use crossterm::{
     },
     terminal,
     ExecutableCommand,
-};
-use std::io::{
-    self,
-    prelude::*,
 };
 
 pub use tui::{
@@ -34,8 +30,10 @@ pub use tui::{
     },
 };
 
-mod event_loop;
-mod window;
+mod application;
 
-pub use event_loop::EventLoop;
-pub use window::Window;
+pub use application::{
+    Application,
+    Event,
+    Renderer,
+};

@@ -7,6 +7,10 @@ pub use anyhow::{
     Result,
 };
 pub use async_std::{
+    pin::{
+        self,
+        Pin,
+    },
     prelude::*,
     task,
 };
@@ -36,6 +40,7 @@ pub use std::{
         Debug,
         Display,
     },
+    io::prelude::*,
     ops::*,
 };
 pub use thiserror::Error;

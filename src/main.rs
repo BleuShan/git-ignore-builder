@@ -1,40 +1,49 @@
 #![warn(missing_debug_implementations, nonstandard_style, rust_2018_idioms)]
 
-mod cli;
+mod configuration;
 mod constants;
 mod prelude;
 mod repository;
+mod state;
 mod ui;
 
 use crate::prelude::*;
-use cli::*;
+use async_std::future;
+use configuration::Configuration;
 use repository::Repository;
-use std::time::Duration;
+use state::State;
 use ui::{
     widgets::*,
-    EventLoop,
-    Window,
+    Application,
+    Event::*,
+    Renderer,
 };
+
+async fn init(renderer: &mut Renderer, mut state: State) -> Result<State> {
+    renderer.draw(|frame| {
+        let size = frame.size();
+        frame.render_widget(Paragraph::new("Loading Configuration"), size)
+    })?;
+    state.load_configuration().await?;
+    renderer.draw(|frame| {
+        let size = frame.size();
+        frame.render_widget(Paragraph::new("Configuration Loaded"), size)
+    })?;
+
+    Ok(state)
+}
+
+async fn update(renderer: &mut Renderer, state: State) -> Result<State> {
+    Ok(state)
+}
 
 #[async_std::main]
 async fn main() -> Result<()> {
-    let mut window = Window::new()?;
-    window.clear()?;
-    let mut event_loop = EventLoop::default();
-    window.draw(|frame| {
-        let size = frame.size();
-        frame.render_widget(Paragraph::new("Loading configuration"), size);
-    })?;
-    let config = Configuration::load().await?;
-
-    if let Some(input) = event_loop.run(move |event| Ok(Some(event))).await? {
-        window.draw(|frame| {
-            let size = frame.size();
-            frame.render_widget(Paragraph::new(format!("{:?}", input).as_str()), size);
-        })?;
-        task::sleep(Duration::from_millis(200)).await
-    }
-
-    let mut _repo = Repository::new(&config);
-    config.save_if_needed().await
+    let mut app = Application::new()?;
+    app.run_loop(|renderer, event, state| match event {
+        Init => Box::pin(init(renderer, state)),
+        Update => Box::pin(update(renderer, state)),
+        _ => Box::pin(future::ready(Ok(state))),
+    })
+    .await
 }
