@@ -9,8 +9,27 @@ use std::{
     },
     sync::Arc,
 };
+use std::{
+    env,
+    path::PathBuf,
+};
+use once_cell::sync::Lazy;
 
-#[derive(Serialize, Deserialize, Clap, Clone, Debug)]
+pub static DEFAULT_CONFIG_DIR: Lazy<PathBuf> = Lazy::new(|| {
+    let mut path = dirs::config_dir()
+        .or_else(dirs::home_dir)
+        .unwrap_or_else(env::temp_dir);
+    path.push(env!("CARGO_PKG_NAME"));
+    path
+});
+
+pub static DEFAULT_IGNORE_REPO_DIR: Lazy<PathBuf> = Lazy::new(|| {
+    let mut path = DEFAULT_CONFIG_DIR.clone();
+    path.push("gitignore");
+    path
+});
+
+#[derive(Clap, Clone, Debug)]
 #[clap(about)]
 pub struct Configuration {
     /// Enable the inclusion of global .gitignore files templates.

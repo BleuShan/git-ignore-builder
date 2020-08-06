@@ -7,15 +7,34 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'gitignorebuilder'",
+            "name": "Debug unit tests in library 'git-ignore-builder-core'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=git-ignore-builder-core"
+                ],
+                "filter": {
+                    "name": "git-ignore-builder-core",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'git-ignore-builder'",
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=gitignorebuilder",
-                    "--package=gitignorebuilder"
+                    "--bin=git-ignore-builder",
+                    "--package=git-ignore-builder"
                 ],
                 "filter": {
-                    "name": "gitignorebuilder",
+                    "name": "git-ignore-builder",
                     "kind": "bin"
                 }
             },
@@ -25,16 +44,16 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in executable 'gitignorebuilder'",
+            "name": "Debug unit tests in executable 'git-ignore-builder'",
             "cargo": {
                 "args": [
                     "test",
                     "--no-run",
-                    "--bin=gitignorebuilder",
-                    "--package=gitignorebuilder"
+                    "--bin=git-ignore-builder",
+                    "--package=git-ignore-builder"
                 ],
                 "filter": {
-                    "name": "gitignorebuilder",
+                    "name": "git-ignore-builder",
                     "kind": "bin"
                 }
             },

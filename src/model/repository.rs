@@ -1,7 +1,5 @@
-use crate::{
-    prelude::*,
-    Configuration,
-};
+use super::Configuration;
+use crate::prelude::*;
 use async_std::{
     sync::Arc,
     task,
@@ -22,7 +20,7 @@ impl Repository {
     pub fn new(config: Arc<Configuration>) -> Self {
         Self {
             config,
-            inner: Default::default(),
+            inner: OnceCell::default(),
         }
     }
 
